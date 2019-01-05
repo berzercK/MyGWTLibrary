@@ -1,26 +1,23 @@
 package com.netcracker.students.BatyrkinAndrew.client;
 
-import com.google.gwt.cell.client.CheckboxCell;
-import com.google.gwt.cell.client.EditTextCell;
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.cellview.client.*;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.view.client.DefaultSelectionEventManager;
-import com.google.gwt.view.client.MultiSelectionModel;
-import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.netcracker.students.BatyrkinAndrew.client.services.*;
-import com.netcracker.students.BatyrkinAndrew.shared.bean.MyBook;
-import com.netcracker.students.BatyrkinAndrew.shared.bean.entity.BookType;
+import com.netcracker.students.BatyrkinAndrew.shared.MyBook;
+import com.netcracker.students.BatyrkinAndrew.shared.BookType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
@@ -30,8 +27,7 @@ public class BatyrkinAndrew implements EntryPoint {
 
     private static CellTable<MyBook> cellTable;
     private static ArrayList<MyBook> myBookList;
-    private static SimplePager pager;
-//    private final CwConstants constants;
+    private ColumnSortEvent.ListHandler<MyBook> sortHandler;
 
     private GetTableServiceAsync getTableService = GWT.create(GetTableService.class);
 
@@ -57,29 +53,7 @@ public class BatyrkinAndrew implements EntryPoint {
      * This is the entry point method.
      */
     public void onModuleLoad() {
-
         getTableService.getListOfBook(new TableCallBack());
-
-        // Do not refresh the headers and footers every time the data is updated.
-        cellTable.setAutoHeaderRefreshDisabled(true);
-        cellTable.setAutoFooterRefreshDisabled(true);
-
-        // Attach a column sort handler to the ListDataProvider to sort the list.
-        ColumnSortEvent.ListHandler<MyBook> sortHandler = new ColumnSortEvent.ListHandler<>(myBookList);
-        cellTable.addColumnSortHandler(sortHandler);
-
-        // Create a Pager to control the table.
-        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
-        pager.setDisplay(cellTable);
-
-        // Add a selection model so we can select cells.
-        final SelectionModel<MyBook> selectionModel = new MultiSelectionModel<>(
-                MyBook::getId);
-        cellTable.setSelectionModel(selectionModel,
-                DefaultSelectionEventManager.<MyBook> createCheckboxManager());
-
-        initTableColumns(selectionModel, sortHandler);
 
         bAdd.addClickHandler(event -> {
             try {
@@ -113,14 +87,15 @@ public class BatyrkinAndrew implements EntryPoint {
         });
 
         bDelete.addClickHandler(event -> {
-//            selectionModel = new SingleSelectionModel<>();
-//            cellTable.setSelectionModel(selectionModel);
+            SingleSelectionModel<MyBook> selectionModel = new SingleSelectionModel<>();
+            cellTable.setSelectionModel(selectionModel);
             selectionModel.addSelectionChangeHandler(event1 -> {
-                MyBook selectedMyBook = (MyBook) ((MultiSelectionModel<MyBook>) selectionModel).getSelectedSet();
+                MyBook selectedMyBook = selectionModel.getSelectedObject();
                 if (selectedMyBook != null) {
                     final MyBook deletedMyBook = selectedMyBook;
                     DeleteBookServiceAsync deleteBookService = GWT.create((DeleteBookService.class));
                     deleteBookService.deleteBook(deletedMyBook, new AsyncCallback<Void>() {
+
                         @Override
                         public void onFailure(Throwable caught) {
                             Window.alert("Что-то пошло не так!");
@@ -138,136 +113,18 @@ public class BatyrkinAndrew implements EntryPoint {
             });
         });
 
-        sortByTitle.addClickHandler(event -> {
-            SortByTitleServiceAsync sortByTitleService = GWT.create(SortByTitleService.class);
-            sortByTitleService.sortByTitle(myBookList, new AsyncCallback<ArrayList<MyBook>>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    Window.alert("Что-то пошло не так!");
-                }
-
-                @Override
-                public void onSuccess(ArrayList<MyBook> result) {
-                    cellTable.removeFromParent();
-                    myBookList = result;
-                    createTable();
-                    createPanel();
-                }
-            });
-        });
-
-        createPanel();
     }
 
 
     private void createTable() {
         cellTable = new CellTable<>(myBookList.size());
-        ColumnSortEvent.ListHandler<MyBook> sortHandler = new ColumnSortEvent.ListHandler<>(myBookList);
-        cellTable.addColumnSortHandler(sortHandler);
+//         Do not refresh the headers and footers every time the data is updated.
+        cellTable.setAutoHeaderRefreshDisabled(true);
+        cellTable.setAutoFooterRefreshDisabled(true);
 
-        addIdColumn(cellTable, sortHandler);
-        addAuthorColumn(cellTable, sortHandler);
-        addTitle(cellTable);
-        addPageAmountColumn(cellTable);
+        // Attach a column sort handler to the ListDataProvider to sort the list.
+        sortHandler = new ColumnSortEvent.ListHandler<>(myBookList);
 
-        addSetTypeColumn(cellTable);
-        addCountColumn(cellTable);
-
-        addDateOfPublicColumn(cellTable);
-        addDateOfAddedColumn(cellTable);
-
-        cellTable.setWidth("100%", true);
-
-        cellTable.setRowCount(myBookList.size(), true);
-        cellTable.setRowData(0, myBookList);
-
-    }
-
-    private void addCountColumn(CellTable<MyBook> cellTable) {
-        TextColumn<MyBook> count = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) {
-                return String.valueOf(object.getCount());
-            }
-        };
-        cellTable.addColumn(count, "Количество");
-    }
-
-    private void addSetTypeColumn(CellTable<MyBook> cellTable) {
-        TextColumn<MyBook> type = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) {
-                return String.valueOf(object.getTypeEnum());
-            }
-        };
-        cellTable.addColumn(type, "Тип книги");
-
-    }
-
-    private void addDateOfAddedColumn(CellTable<MyBook> cellTable) {
-        TextColumn<MyBook> dateOfAdded = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) { return String.valueOf(object.getDateOfAdded()); }
-        };
-        cellTable.addColumn(dateOfAdded, "Дата добавления");
-    }
-
-    private void addDateOfPublicColumn(CellTable<MyBook> cellTable) {
-        TextColumn<MyBook> dateOfPublic = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) { return String.valueOf(object.getDateOfPublication()); }
-        };
-        cellTable.addColumn(dateOfPublic, "Дата публикации");
-    }
-
-    private void addPageAmountColumn(CellTable<MyBook> cellTable) {
-        TextColumn<MyBook> pageAmount = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) {
-                return String.valueOf(object.getPageAmount());
-            }
-        };
-        cellTable.addColumn(pageAmount, "Страниц");
-    }
-
-    private void addTitle(CellTable<MyBook> cellTable) {
-        TextColumn<MyBook> title = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) {
-                return String.valueOf(object.getTitle());
-            }
-        };
-        cellTable.addColumn(title, "Название");
-        title.setSortable(true);
-
-        ColumnSortEvent.ListHandler<MyBook> titleSortHandler = new ColumnSortEvent.ListHandler<>(myBookList);
-        titleSortHandler.setComparator(title, MyBook::compareTitle);
-        cellTable.addColumnSortHandler(titleSortHandler);
-
-    }
-
-    private void addAuthorColumn(CellTable<MyBook> cellTable, ColumnSortEvent.ListHandler<MyBook> sortHandler) {
-        TextColumn<MyBook> author = new TextColumn<MyBook>() {
-            @Override
-            public String getValue(MyBook object) {
-                return String.valueOf(object.getAuthor());
-            }
-        };
-        cellTable.addColumn(author, "Автор");
-        author.setSortable(true);
-
-        sortHandler.setComparator(author, Comparator.comparing(MyBook::getAuthor));
-        cellTable.getColumnSortList().push(author);
-        cellTable.getColumnSortList().push(author);
-
-//        ColumnSortEvent.ListHandler<MyBook> authorSortHandler = new ColumnSortEvent.ListHandler<>(myBookList);
-//        authorSortHandler.setComparator(author, MyBook::compareTo);
-//        cellTable.addColumnSortHandler(authorSortHandler);
-
-
-    }
-
-    private void addIdColumn(CellTable<MyBook> cellTable, ColumnSortEvent.ListHandler<MyBook> sortHandler) {
         TextColumn<MyBook> id = new TextColumn<MyBook>() {
             @Override
             public String getValue(MyBook object) {
@@ -277,36 +134,108 @@ public class BatyrkinAndrew implements EntryPoint {
         cellTable.addColumn(id, "id");
         id.setSortable(true);
 
-        sortHandler.setComparator(id, (o1, o2) -> {
-            if (o1.getId() - o2.getId() == 0) return 0;
-            return o1.getId() - o2.getId();
-        });
-        cellTable.getColumnSortList().push(id);
-        cellTable.getColumnSortList().push(id);
+        TextColumn<MyBook> author = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) {
+                return String.valueOf(object.getAuthor());
+            }
+        };
+        cellTable.addColumn(author, "Автор");
+        author.setSortable(true);
+//        sortHandler.setComparator(author, Comparator.comparing(MyBook::getAuthor));
+//        addAuthorColumn(cellTable, sortHandler);
 
-        // Add a ColumnSortEvent.ListHandler to connect sorting to the
-        // java.util.List.
-//        ColumnSortEvent.ListHandler<MyBook> idSortHandler = new ColumnSortEvent.ListHandler<>(myBookList);
-//        idSortHandler.setComparator(id, MyBook::compareId);
-//        cellTable.addColumnSortHandler(idSortHandler);
-//        // We know that the data is sorted alphabetically by default.
-//        cellTable.getColumnSortList().push(id);
-//        cellTable.getColumnSortList().push(id);
+        TextColumn<MyBook> title = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) {
+                return String.valueOf(object.getTitle());
+            }
+        };
+        cellTable.addColumn(title, "Название");
+        title.setSortable(true);
+//        sortHandler.setComparator(title, MyBook::compareTitle);
+//        addTitle(cellTable);
 
+        TextColumn<MyBook> pageAmount = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) {
+                return String.valueOf(object.getPageAmount());
+            }
+        };
+        cellTable.addColumn(pageAmount, "Страниц");
+        pageAmount.setSortable(true);
+//        addPageAmountColumn(cellTable);
+
+        TextColumn<MyBook> type = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) {
+                return String.valueOf(object.getTypeEnum());
+            }
+        };
+        cellTable.addColumn(type, "Тип книги");
+        type.setSortable(true);
+//        addSetTypeColumn(cellTable);
+
+        TextColumn<MyBook> count = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) {
+                return String.valueOf(object.getCount());
+            }
+        };
+        cellTable.addColumn(count, "Количество");
+        count.setSortable(true);
+//        addCountColumn(cellTable);
+
+        TextColumn<MyBook> dateOfPublic = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) { return String.valueOf(object.getDateOfPublication()); }
+        };
+        cellTable.addColumn(dateOfPublic, "Дата публикации");
+        dateOfPublic.setSortable(true);
+//        addDateOfPublicColumn(cellTable);
+
+        TextColumn<MyBook> dateOfAdded = new TextColumn<MyBook>() {
+            @Override
+            public String getValue(MyBook object) { return String.valueOf(object.getDateOfAdded()); }
+        };
+        cellTable.addColumn(dateOfAdded, "Дата добавления");
+        dateOfAdded.setSortable(true);
+//        addDateOfAddedColumn(cellTable);
+
+        //Compare columns
+        ListDataProvider<MyBook> dataProvider = new ListDataProvider<>();
+        dataProvider.addDataDisplay(cellTable);
+        List<MyBook> list = dataProvider.getList();
+        list.addAll(myBookList);
+        ColumnSortEvent.ListHandler<MyBook> columnSortHandler = new ColumnSortEvent.ListHandler<>(list);
+        columnSortHandler.setComparator(id, MyBook::compareTo);
+        columnSortHandler.setComparator(author, MyBook::compareAuthor);
+        columnSortHandler.setComparator(title, MyBook::compareTitle);
+        columnSortHandler.setComparator(pageAmount, MyBook::comparePageAmount);
+        columnSortHandler.setComparator(dateOfPublic, Comparator.comparing(MyBook::getDateOfPublication));
+        columnSortHandler.setComparator(dateOfAdded, Comparator.comparing(MyBook::getDateOfAdded));
+        columnSortHandler.setComparator(type, Comparator.comparing(MyBook::getTypeEnum));
+        columnSortHandler.setComparator(count, MyBook::compareCount);
+        cellTable.addColumnSortHandler(columnSortHandler);
+
+        // We know that the data is sorted alphabetically by default.
+        cellTable.getColumnSortList().push(author);
+
+
+//        cellTable.addColumnSortHandler(sortHandler);
+        cellTable.setWidth("100%", true);
+        cellTable.setRowCount(myBookList.size(), true);
+        cellTable.setRowData(0, myBookList);
     }
 
     private void createPanel() {
-        tbId.setText(String.valueOf(myBookList.get(myBookList.size() - 1).getId() + 1));
-        tbId.setMaxLength(5);
+        tbId.setText(String.valueOf(myBookList.size() + 1));
 
         tbAuthor.setText("Автор");
         tbTitle.setText("Название");
-        tbPageAmount.setText("Страниц");
+        tbPageAmount.setText("Количество страниц");
         tbDateOfPublic.setText("Дата публикации");
-        for (BookType bt :
-                BookType.values()) {
-            lbType.addItem(String.valueOf(bt));
-        }
+        for (BookType bt : BookType.values()) { lbType.addItem(String.valueOf(bt)); }
         tbCount.setText("Количество в наличии");
 
         hpAdded.add(tbId);
@@ -316,10 +245,10 @@ public class BatyrkinAndrew implements EntryPoint {
         hpAdded.add(lbType);
         hpAdded.add(tbCount);
         hpAdded.add(tbDateOfPublic);
+        hpAdded.setWidth("87%");
 
         vpBut.add(bAdd);
         vpBut.add(bDelete);
-        vpBut.add(sortByTitle);
 
         vpMain.add(cellTable);
         vpMain.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_JUSTIFY);
@@ -343,81 +272,7 @@ public class BatyrkinAndrew implements EntryPoint {
             myBookList = result;
             createTable();
             createPanel();
-
-//
-//
-//            firstNameColumn.setSortable(true);
-//            sortHandler.setComparator(firstNameColumn, new Comparator<ContactInfo>() {
-//                @Override
-//                public int compare(ContactInfo o1, ContactInfo o2) {
-//                    return o1.getFirstName().compareTo(o2.getFirstName());
-//                }
-//            });
-
         }
-    }
-    /**
-     * Add the columns to the table.
-     * @param selectionModel
-     * @param sortHandler
-     */
-    private void initTableColumns(
-            final SelectionModel<MyBook> selectionModel,
-            ColumnSortEvent.ListHandler<MyBook> sortHandler) {
-        // Checkbox column. This table will uses a checkbox column for selection.
-        // Alternatively, you can call cellTable.setSelectionEnabled(true) to enable
-        // mouse selection.
-        Column<MyBook, Boolean> checkColumn = new Column<MyBook, Boolean>(
-                new CheckboxCell(true, false)) {
-            @Override
-            public Boolean getValue(MyBook object) {
-                // Get the value from the selection model.
-                return selectionModel.isSelected(object);
-            }
-        };
-        cellTable.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
-        cellTable.setColumnWidth(checkColumn, 40, Style.Unit.PX);
-
-        // First name.
-        Column<MyBook, String> authorColumn = new Column<MyBook, String>(
-                new EditTextCell()) {
-            @Override
-            public String getValue(MyBook object) {
-                return object.getAuthor();
-            }
-        };
-        authorColumn.setSortable(true);
-        sortHandler.setComparator(authorColumn, Comparator.comparing(MyBook::getAuthor));
-        cellTable.addColumn(authorColumn);
-        cellTable.setColumnWidth(authorColumn, 20, Style.Unit.PCT);
-
-        // Last name.
-        Column<MyBook, String> titleColumn = new Column<MyBook, String>(
-                new EditTextCell()) {
-            @Override
-            public String getValue(MyBook object) {
-                return object.getTitle();
-            }
-        };
-        titleColumn.setSortable(true);
-        sortHandler.setComparator(titleColumn, Comparator.comparing(MyBook::getTitle));
-        cellTable.addColumn(titleColumn);
-        cellTable.setColumnWidth(titleColumn, 20, Style.Unit.PCT);
-
-        // Address.
-        Column<MyBook, String> pageAmountColumn = new Column<MyBook, String>(
-                new TextCell()) {
-            @Override
-            public String getValue(MyBook object) {
-                return String.valueOf(object.getPageAmount());
-            }
-        };
-        pageAmountColumn.setSortable(true);
-        pageAmountColumn.setDefaultSortAscending(false);
-        sortHandler.setComparator(pageAmountColumn, MyBook::compareId);
-        cellTable.addColumn(pageAmountColumn);
-
-        cellTable.setColumnWidth(pageAmountColumn, 60, Style.Unit.PCT);
     }
 
 }

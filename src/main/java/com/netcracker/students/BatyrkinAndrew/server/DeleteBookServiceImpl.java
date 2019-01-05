@@ -3,8 +3,8 @@ package com.netcracker.students.BatyrkinAndrew.server;
 import com.google.gson.Gson;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.netcracker.students.BatyrkinAndrew.client.services.DeleteBookService;
-import com.netcracker.students.BatyrkinAndrew.shared.bean.IPathFile;
-import com.netcracker.students.BatyrkinAndrew.shared.bean.MyBook;
+import com.netcracker.students.BatyrkinAndrew.shared.IPathFile;
+import com.netcracker.students.BatyrkinAndrew.shared.MyBook;
 
 import java.io.*;
 import java.util.ArrayList;

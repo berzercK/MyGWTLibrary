@@ -9,11 +9,6 @@
     </welcome-file-list>
 
     <servlet>
-        <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew BatyrkinAndrewService</servlet-name>
-        <servlet-class>com.netcracker.students.BatyrkinAndrew.server.BatyrkinAndrewServiceImpl</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew DeleteBookService</servlet-name>
         <servlet-class>com.netcracker.students.BatyrkinAndrew.server.DeleteBookServiceImpl</servlet-class>
     </servlet>
@@ -22,19 +17,9 @@
         <servlet-class>com.netcracker.students.BatyrkinAndrew.server.GetTableServiceImpl</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew SortByTitleService</servlet-name>
-        <servlet-class>com.netcracker.students.BatyrkinAndrew.server.SortByTitleServiceImpl</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew AddNewBookService</servlet-name>
         <servlet-class>com.netcracker.students.BatyrkinAndrew.server.AddNewBookServiceImpl</servlet-class>
     </servlet>
-
-
-    <servlet-mapping>
-        <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew BatyrkinAndrewService</servlet-name>
-        <url-pattern>/BatyrkinAndrew/BatyrkinAndrewService</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew DeleteBookService</servlet-name>
@@ -44,11 +29,7 @@
         <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew GetTableService</servlet-name>
         <url-pattern>/BatyrkinAndrew/GetTableService</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew SortByTitleService</servlet-name>
-        <url-pattern>/BatyrkinAndrew/SortByTitleService</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
+      <servlet-mapping>
         <servlet-name>com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew AddNewBookService</servlet-name>
         <url-pattern>/BatyrkinAndrew/AddNewBookService</url-pattern>
     </servlet-mapping>

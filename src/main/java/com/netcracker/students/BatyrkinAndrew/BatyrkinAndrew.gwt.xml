@@ -10,8 +10,6 @@
     <entry-point class='com.netcracker.students.BatyrkinAndrew.client.BatyrkinAndrew'/>
 
     <!-- Specify the app servlets.                   -->
-    <servlet path='/BatyrkinAndrewService'
-             class='com.netcracker.students.BatyrkinAndrew.server.BatyrkinAndrewServiceImpl'/>
 
     <servlet path="/GetTableService"
              class="com.netcracker.students.BatyrkinAndrew.server.GetTableServiceImpl"/>
@@ -19,8 +17,6 @@
              class="com.netcracker.students.BatyrkinAndrew.server.AddNewBookServiceImpl"/>
     <servlet path="/DeleteBookService"
              class="com.netcracker.students.BatyrkinAndrew.server.DeleteBookServiceImpl"/>
-    <servlet path="/SortByTitleService"
-             class="com.netcracker.students.BatyrkinAndrew.server.SortByTitleServiceImpl"/>
 
     <source path='client'/>
     <source path='shared'/>

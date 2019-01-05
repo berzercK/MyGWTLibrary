@@ -1,0 +1,24 @@
+/** Add css rules here for your application. */
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+body, div, .p {
+    font-family: arial, sans-serif;
+    align-self: center;
+}
+
+.gwt-Button{
+    color: darkblue;
+    margin: 10px;
+    align-items: center;
+}
+
+.gwt-CellTable{
+    margin: 10px;
+    align-self: center;
+}
+

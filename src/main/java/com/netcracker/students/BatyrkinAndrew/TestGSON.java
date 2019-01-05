@@ -1,7 +1,7 @@
 package com.netcracker.students.BatyrkinAndrew;
 
 import com.google.gson.Gson;
-import com.netcracker.students.BatyrkinAndrew.shared.bean.MyBook;
+import com.netcracker.students.BatyrkinAndrew.shared.MyBook;
 
 import java.io.*;
 import java.util.ArrayList;
