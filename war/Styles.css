@@ -1,0 +1,61 @@
+/** Add css rules here for your application. */
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+body, td, a, div, .p {
+    font-family: arial, sans-serif
+}
+
+.gwt-Button{
+    color:red;
+}
+.gwt-Green-Button{
+    color:green;
+}
+.gwt-Blue-Button {
+    color:blue;
+}
+
+.gwt-PushButton{
+    color:red;
+}
+.gwt-PushButton-up {
+    color:green;
+}
+.gwt-PushButton-down {
+    color:blue;
+}
+.gwt-PushButton-up-hovering {
+    color:pink;
+}
+.gwt-PushButton-down-hovering {
+    color:aqua;
+}
+.gwt-PushButton-up-disabled {
+    color:lime;
+}
+.gwt-PushButton-down-disabled {
+    color:maroon;
+}
+.gwt-ToggleButton-up {
+    color:green;
+}
+.gwt-ToggleButton-down {
+    color:blue;
+}
+.gwt-ToggleButton-up-hovering {
+    color:pink;
+}
+.gwt-ToggleButton-down-hovering {
+    color:aqua;
+}
+.gwt-ToggleButton-up-disabled {
+    color:lime;
+}
+.gwt-ToggleButton-down-disabled {
+    color:maroon;
+}

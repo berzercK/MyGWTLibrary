@@ -1,0 +1,29 @@
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.8.0//EN"
+        "http://gwtproject.org/doctype/2.8.0/gwt-module.dtd">
+<module rename-to="BatyrkinAndrew">
+
+    <!-- Inherit the core Web Toolkit stuff.                  -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.netcracker.students.BatyrkinAndrew.BatyrkinAndrew"/>
+
+    Specify the app entry point class.
+    <entry-point class='com.netcracker.students.BatyrkinAndrew.client.BatyrkinAndrew'/>
+
+    <!-- Specify the app servlets.                   -->
+    <servlet path='/BatyrkinAndrewService'
+             class='com.netcracker.students.BatyrkinAndrew.server.BatyrkinAndrewServiceImpl'/>
+
+    <servlet path="/GetTableService"
+             class="com.netcracker.students.BatyrkinAndrew.server.GetTableServiceImpl"/>
+    <servlet path="/AddNewBookService"
+             class="com.netcracker.students.BatyrkinAndrew.server.AddNewBookServiceImpl"/>
+    <servlet path="/DeleteBookService"
+             class="com.netcracker.students.BatyrkinAndrew.server.DeleteBookServiceImpl"/>
+    <servlet path="/SortByTitleService"
+             class="com.netcracker.students.BatyrkinAndrew.server.SortByTitleServiceImpl"/>
+
+    <source path='client'/>
+    <source path='shared'/>
+
+
+</module>
