@@ -37,7 +37,6 @@ public class BatyrkinAndrew implements EntryPoint {
     private HorizontalPanel hpMain = new HorizontalPanel();
     private Button bAdd =        new Button("Добавить книгу");
     private Button bDelete =     new Button("Удалить книгу");
-    private Button sortByTitle = new Button("Сорт. по названию");
 
     private TextBox tbId = new TextBox();
     private TextBox tbAuthor = new TextBox();
