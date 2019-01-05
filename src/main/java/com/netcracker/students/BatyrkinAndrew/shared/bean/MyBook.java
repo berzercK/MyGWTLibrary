@@ -1,5 +1,7 @@
 package com.netcracker.students.BatyrkinAndrew.shared.bean;
 
+import com.netcracker.students.BatyrkinAndrew.shared.bean.entity.BookType;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -12,16 +14,22 @@ public class MyBook implements Serializable, Comparable<MyBook> {
     private String dateOfPublication;
     private Date dateOfAdded;
 
+    private BookType typeEnum;
+    private int count;
+
     public MyBook() {
     }
 
-    public MyBook(int id, String author, String title, int pageAmount, String dateOfPublication, Date dateOfAdded) {
+    public MyBook(int id, String author, String title, int pageAmount, String dateOfPublication, Date dateOfAdded, BookType typeEnum, int count) {
         this.id = id;
         this.author = author;
         this.title = title;
         this.pageAmount = pageAmount;
         this.dateOfPublication = dateOfPublication;
         this.dateOfAdded = dateOfAdded;
+
+        this.typeEnum = typeEnum;
+        this.count = count;
     }
 
     public int getId() {
@@ -72,6 +80,22 @@ public class MyBook implements Serializable, Comparable<MyBook> {
         this.dateOfAdded = dateOfAdded;
     }
 
+    public BookType getTypeEnum() {
+        return typeEnum;
+    }
+
+    public void setTypeEnum(BookType typeEnum) {
+        this.typeEnum = typeEnum;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     @Override
     public int compareTo(MyBook o) {
         return o.author.compareTo(this.author); //sort by Title of book
@@ -84,15 +108,17 @@ public class MyBook implements Serializable, Comparable<MyBook> {
         MyBook myBook = (MyBook) o;
         return id == myBook.id &&
                 pageAmount == myBook.pageAmount &&
-                Objects.equals(author, myBook.author) &&
-                Objects.equals(title, myBook.title) &&
+                count == myBook.count &&
+                author.equals(myBook.author) &&
+                title.equals(myBook.title) &&
                 Objects.equals(dateOfPublication, myBook.dateOfPublication) &&
-                Objects.equals(dateOfAdded, myBook.dateOfAdded);
+                dateOfAdded.equals(myBook.dateOfAdded) &&
+                typeEnum == myBook.typeEnum;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, author, title, pageAmount, dateOfPublication, dateOfAdded);
+        return Objects.hash(id, author, title, pageAmount, dateOfPublication, dateOfAdded, typeEnum, count);
     }
 
     @Override
@@ -104,8 +130,21 @@ public class MyBook implements Serializable, Comparable<MyBook> {
                 ", pageAmount=" + pageAmount +
                 ", dateOfPublication='" + dateOfPublication + '\'' +
                 ", dateOfAdded=" + dateOfAdded +
+                ", typeEnum=" + typeEnum +
+                ", count=" + count +
                 '}';
     }
+
+    public int compareId(MyBook o) {
+        if (o.id == id) return 0;
+        return o.id > id ? 1 : -1;
+    }
+
+    public int compareTitle(MyBook o) {
+        return o.title.compareTo(this.title);
+    }
+
+
 }
 
 

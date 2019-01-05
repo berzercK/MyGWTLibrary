@@ -1,0 +1,10 @@
+{"id": 0,"author":"Батыркин А.","title":"Тестовая запись","pageAmount":200,"dateOfPublication":"2019","dateOfAdded":"Jan 5, 2019 1:02:35 AM","typeEnum": "Journal","count": 400}
+{"id": 1,"author":"Пушкин","title": "Руслан и Людмила","pageAmount": 300,"dateOfPublication": "1820","dateOfAdded":"Dec 29, 2018 3:30:42 PM","typeEnum":"Literature","count": 10}
+{"id": 3,"author":"Толстой","title": "Война и мир","pageAmount": 1225,"dateOfPublication": "1867","dateOfAdded": "Dec 29, 2018 3:32:15 PM","typeEnum": "Literature","count": 20}
+{"id": 4,"author":"Гоголь","title": "Война и мир","pageAmount": 76,"dateOfPublication": "2014","dateOfAdded": "Dec 29, 2018 1:32:15 PM","typeEnum": "Textbook","count": 15}
+{"id": 5,"author":"Кое-кто","title": "Космопол","pageAmount": 30,"dateOfPublication": "2012","dateOfAdded": "Dec 29, 2018 2:52:15 PM","typeEnum": "Journal","count": 30}
+{"id": 6,"author":"Ефремов","title": "Час быка","pageAmount": 460,"dateOfPublication": "1965","dateOfAdded": "Dec 29, 2018 6:34:02 PM","typeEnum": "Literature","count": 45}
+{"id": 7,"author":"Ефремов","title": "Туманность Андромеды","pageAmount": 43,"dateOfPublication": "1961","dateOfAdded": "Dec 29, 2018 2:12:14 PM","typeEnum": "Literature","count": 15}
+{"id": 8,"author":"Гейзенерг","title": "Часть и целое","pageAmount": 310,"dateOfPublication": "2015","dateOfAdded": "Dec 29, 2018 3:46:43 PM","typeEnum": "Textbook","count": 75}
+{"id": 9,"author":"Кто-то там","title": "Путеводитель","pageAmount": 50,"dateOfPublication": "2017","dateOfAdded": "Dec 29, 2018 4:25:37 PM","typeEnum": "Directory","count": 46}
+{"id": 10,"author":"Даль","title": "Словарь","pageAmount": 2000,"dateOfPublication": "1985","dateOfAdded": "Dec 30, 2018 3:19:15 PM","typeEnum": "Dictionary","count": 80}
